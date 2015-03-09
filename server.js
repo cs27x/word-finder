@@ -1,6 +1,9 @@
 var express = require('express');
 var _ = require('underscore');
 var app = express();
+var bunyan = require('bunyan');
+
+var log = bunyan.createLogger({name: "wordfinder"});
 
 var config = require('./lib/config');
 var words = require('./lib/words');
@@ -19,6 +22,7 @@ app.get('/', function (req, res) {
 
 app.post('/search', function (req, res) {
   var result = words.search(req.body.pattern).result;
+  log.info({searchTerm:req.body.pattern,result:result});
   res.render('result', { words: result, pattern: req.body.pattern });
 });
 
